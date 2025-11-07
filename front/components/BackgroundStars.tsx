@@ -2,121 +2,67 @@
 
 import React from "react";
 
-// 4-pointed star (십자가 모양) SVG 컴포넌트
-const FourPointedStar: React.FC<{ size: number; className?: string }> = ({ size, className }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    className={className}
-  >
-    <path
-      d="M12 0L13.5 9L12 12L10.5 9L12 0Z"
-      fill="currentColor"
-    />
-    <path
-      d="M12 24L13.5 15L12 12L10.5 15L12 24Z"
-      fill="currentColor"
-    />
-    <path
-      d="M0 12L9 10.5L12 12L9 13.5L0 12Z"
-      fill="currentColor"
-    />
-    <path
-      d="M24 12L15 10.5L12 12L15 13.5L24 12Z"
-      fill="currentColor"
-    />
-  </svg>
-);
-
 export const BackgroundStars: React.FC = () => {
   return (
-    <div className="fixed inset-0 w-full h-full overflow-hidden pointer-events-none">
-      {/* Grid Pattern - Figma 디자인의 배경 그리드 */}
+    <div className="w-[1920px] h-[1099px] left-0 top-0 absolute overflow-hidden">
+      {/* Grid Pattern - 디자인 이미지의 배경 그리드 (50x50px) */}
       <div
-        className="absolute inset-0 opacity-20"
+        className="absolute inset-0"
         style={{
           backgroundImage: `
-            linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px)
+            linear-gradient(to right, rgba(51, 51, 51, 1) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(51, 51, 51, 1) 1px, transparent 1px)
           `,
-          backgroundSize: '80px 80px'
+          backgroundSize: '50px 50px',
+          opacity: 1
         }}
       />
 
-      {/* Large Glow Effect - 중앙 하단 */}
-      <div
-        className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2 w-[40vw] h-[40vw] max-w-[661px] max-h-[661px]"
-        style={{
-          background: 'radial-gradient(circle, rgba(255, 237, 213, 0.5) 0%, rgba(255, 237, 213, 0.15) 40%, transparent 70%)',
-          filter: 'blur(120px)'
-        }}
-      />
+      {/* Large Glow Effect - 중앙 하단 (디자인 이미지 기준) */}
+      <div className="w-[661.12px] h-[661.12px] left-[638px] top-[993px] absolute bg-orange-100 blur-[312px]" />
 
-      {/* Stars with Glow - 4-pointed star shape */}
-      {/* Left Top Small */}
-      <div className="absolute left-[7%] top-[13%]">
-        <FourPointedStar size={14} className="text-white/95" />
-        <div className="absolute inset-0 w-[100px] h-[100px] -left-[43px] -top-[43px] bg-yellow-100/30 blur-[40px]" />
+      {/* Stars with Glow - 디자인 이미지 기준 정확한 위치와 크기 */}
+      {/* Left Top Small - (354px, 463.5px) */}
+      <div className="absolute left-[354px] top-[463.50px] overflow-hidden">
+        <div className="w-3.5 h-3.5 left-0 top-0 absolute bg-stone-300" />
+        <div className="w-36 h-40 left-[287px] top-[393px] absolute bg-orange-100/50 border border-black blur-3xl" />
       </div>
 
-      {/* Left Bottom Medium */}
-      <div className="absolute left-[7%] bottom-[18%]">
-        <FourPointedStar size={16} className="text-white/95" />
-        <div className="absolute inset-0 w-[110px] h-[110px] -left-[47px] -top-[47px] bg-yellow-100/35 blur-[45px]" />
+      {/* Left Bottom Medium - (133.5px, 769.5px) */}
+      <div className="absolute left-[133.50px] top-[769.50px] overflow-hidden">
+        <div className="w-5 h-5 left-0 top-0 absolute bg-stone-300" />
+        <div className="w-36 h-40 left-[70px] top-[703px] absolute bg-orange-100/50 blur-[85px]" />
       </div>
 
-      {/* Center Top */}
-      <div className="absolute left-[33%] top-[20%]">
-        <FourPointedStar size={18} className="text-white/95" />
-        <div className="absolute inset-0 w-[120px] h-[120px] -left-[51px] -top-[51px] bg-yellow-100/40 blur-[48px]" />
+      {/* Center Top - (611.94px, 221px) */}
+      <div className="absolute left-[611.94px] top-[221px] overflow-hidden">
+        <div className="w-7 h-7 left-0 top-0 absolute bg-stone-300" />
+        <div className="w-36 h-40 left-[552px] top-[158px] absolute bg-orange-100/50 blur-[100px]" />
       </div>
 
-      {/* Right Top */}
-      <div className="absolute left-[68%] top-[18%]">
-        <FourPointedStar size={14} className="text-white/90" />
-        <div className="absolute inset-0 w-[100px] h-[100px] -left-[43px] -top-[43px] bg-yellow-100/30 blur-[40px]" />
+      {/* Left Top Very Small - (122.09px, 130.09px) */}
+      <div className="absolute left-[122.09px] top-[130.09px] overflow-hidden">
+        <div className="w-4 h-4 left-0 top-0 absolute bg-stone-300" />
+        <div className="w-24 h-28 left-[79px] top-[85px] absolute bg-orange-100/50 blur-[55px]" />
       </div>
 
-      {/* Right Center */}
-      <div className="absolute right-[4%] top-[44%]">
-        <FourPointedStar size={16} className="text-white/95" />
-        <div className="absolute inset-0 w-[110px] h-[110px] -left-[47px] -top-[47px] bg-yellow-100/35 blur-[45px]" />
+      {/* Right Center - (1794px, 440px) */}
+      <div className="absolute left-[1794px] top-[440px] overflow-hidden">
+        <div className="w-7 h-7 left-0 top-0 absolute bg-stone-300" />
+        <div className="w-44 h-44 left-[1722px] top-[363px] absolute bg-orange-100/50 blur-[90px]" />
       </div>
 
-      {/* Right Bottom */}
-      <div className="absolute right-[8%] bottom-[14%]">
-        <FourPointedStar size={15} className="text-white/90" />
-        <div className="absolute inset-0 w-[105px] h-[105px] -left-[45px] -top-[45px] bg-yellow-100/32 blur-[42px]" />
+      {/* Right Top - (1300.84px, 205px) */}
+      <div className="absolute left-[1300.84px] top-[205px] overflow-hidden">
+        <div className="w-3.5 h-3.5 left-0 top-0 absolute bg-stone-300" />
+        <div className="w-32 h-36 left-[1241px] top-[141px] absolute bg-orange-100/50 blur-3xl" />
       </div>
 
-      {/* Additional Subtle Stars */}
-      <div className="absolute left-[20%] top-[32%]">
-        <FourPointedStar size={10} className="text-white/70" />
+      {/* Right Bottom - (1653px, 898px) */}
+      <div className="absolute left-[1653px] top-[898px] overflow-hidden">
+        <div className="w-3.5 h-3.5 left-0 top-0 absolute bg-stone-300" />
+        <div className="w-44 h-48 left-[1571px] top-[811px] absolute bg-orange-100/50 blur-[100px]" />
       </div>
-      <div className="absolute left-[45%] top-[8%]">
-        <FourPointedStar size={9} className="text-white/65" />
-      </div>
-      <div className="absolute left-[82%] top-[25%]">
-        <FourPointedStar size={10} className="text-white/68" />
-      </div>
-      <div className="absolute left-[15%] bottom-[35%]">
-        <FourPointedStar size={9} className="text-white/62" />
-      </div>
-      <div className="absolute left-[62%] top-[45%]">
-        <FourPointedStar size={10} className="text-white/70" />
-      </div>
-      <div className="absolute right-[20%] bottom-[25%]">
-        <FourPointedStar size={11} className="text-white/68" />
-      </div>
-
-      {/* More Subtle Glow Effects */}
-      <div className="absolute left-[7%] top-[13%] w-[180px] h-[180px] bg-yellow-100/15 blur-[60px]" />
-      <div className="absolute right-[4%] top-[44%] w-[200px] h-[200px] bg-yellow-100/18 blur-[65px]" />
-      <div className="absolute left-[7%] bottom-[18%] w-[160px] h-[160px] bg-yellow-100/16 blur-[55px]" />
-      <div className="absolute right-[8%] bottom-[14%] w-[190px] h-[190px] bg-yellow-100/17 blur-[58px]" />
     </div>
   );
 };

@@ -12,12 +12,11 @@ export const ResponseMessage: React.FC<ResponseMessageProps> = ({
   className = "",
 }) => {
   return (
-    <div className={`w-full max-w-[880px] min-h-[620px] relative ${className}`}>
-      <div className="absolute inset-[10px_0_0_0] neumorphic-panel-dark rounded-[50px]" />
-      <div
-        className="relative px-10 py-14 text-zinc-100 text-xl font-normal font-noto-sans-kr leading-[2.5] tracking-wide break-words z-10"
-        dangerouslySetInnerHTML={{ __html: content }}
-      />
+    <div className={`w-[880px] h-[620px] relative overflow-hidden ${className}`}>
+      <div className="w-[880px] h-[600px] left-0 top-[10px] absolute bg-zinc-800 rounded-[50px] shadow-[inset_12px_12px_24px_0px_rgba(30,30,30,1.00)] shadow-[inset_-12px_-12px_24px_0px_rgba(62,62,62,1.00)]" />
+      <div className="w-[797px] h-[531px] left-[41px] top-[55px] absolute justify-center">
+        <span className="text-zinc-100 text-2xl font-normal font-['Noto_Sans_KR'] leading-10 tracking-wide" dangerouslySetInnerHTML={{ __html: content }} />
+      </div>
     </div>
   );
 };

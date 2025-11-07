@@ -50,36 +50,25 @@ const exampleProducts = [
 
 export default function ExamplePage() {
   return (
-    <div className="w-full h-full min-h-screen relative overflow-hidden bg-[#0f0f0f]">
-      <div className="absolute inset-0">
+    <div className="w-[1920px] h-[1099px] relative overflow-hidden">
+      <div className="w-[1920px] h-[1099px] left-0 top-0 absolute overflow-hidden">
         <BackgroundStars />
       </div>
-      <div className="relative w-full h-full min-h-screen flex flex-col">
+      <div className="w-[1920px] left-0 top-0 absolute inline-flex flex-col justify-start items-start overflow-hidden">
         <Header />
-        <div className="flex-1 flex w-full h-[994px]">
+        <div className="w-[1920px] h-[994px] inline-flex justify-between items-center overflow-hidden">
           {/* 왼쪽 패널 - 대화창 */}
-          <div className="w-[960px] h-full flex flex-col pt-10 px-10 pb-0 gap-3.5 items-end relative">
+          <div className="w-[960px] h-[994px] px-10 pt-10 relative inline-flex flex-col justify-start items-end gap-3.5">
             {/* 대화창 배경 */}
-            <div className="absolute w-[1026px] h-[1051px] left-[-61px] top-[15px]">
-              {/* Blur Layer */}
-              <div className="absolute inset-[-26px]">
-                <div className="absolute w-[1178px] h-[1203px] left-[-50px] top-[-50px] bg-white">
-                  <div className="absolute w-[1026px] h-[1051px] left-[76px] top-[76px] bg-black rounded-[34px]" />
+            <div className="w-[1026px] h-[1051px] left-[-61px] top-[15px] absolute">
+              <div className="w-[1078px] h-[1103px] left-[-26px] top-[-26px] absolute">
+                <div className="w-[1178px] h-[1203px] left-[-50px] top-[-50px] absolute bg-white">
+                  <div className="w-[1026px] h-[1051px] left-[76px] top-[76px] absolute bg-black rounded-[34px]" />
                 </div>
-                <div className="absolute inset-[31px_26px_21px_26px] bg-black/10 rounded-[34px] blur-[20px] backdrop-blur-2xl mix-blend-hard-light" />
+                <div className="w-[1026px] h-[1051px] left-[26px] top-[31px] absolute bg-blend-hard-light bg-black/10 rounded-[34px] blur-[20px] backdrop-blur-2xl" />
               </div>
-              
-              {/* Glass Effect */}
-              <div className="absolute inset-0 opacity-[0.67] rounded-[50px]">
-                <div className="absolute inset-0 bg-[#cccccc] mix-blend-color-burn rounded-[50px]" />
-                <div 
-                  className="absolute inset-0 rounded-[50px]" 
-                  style={{
-                    background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.03) 100%), linear-gradient(90deg, rgba(51, 51, 51, 0.85) 0%, rgba(51, 51, 51, 0.85) 100%)'
-                  }}
-                />
-              </div>
-              <div className="absolute inset-0 bg-black/0 rounded-[50px]" />
+              <div className="w-[1026px] h-[1051px] left-0 top-0 absolute opacity-70 bg-white/5 rounded-[50px]" />
+              <div className="w-[1026px] h-[1051px] left-0 top-0 absolute bg-black/0 rounded-[50px]" />
             </div>
 
             <div className="relative z-10 w-full flex flex-col items-end gap-3.5">
@@ -87,66 +76,45 @@ export default function ExamplePage() {
               <ResponseMessage content={exampleResponse} />
             </div>
 
-            <div className="absolute left-[40px] bottom-[142px] w-[880px]">
+            <div className="w-[880px] h-28 py-2.5 left-[40px] top-[852px] absolute flex flex-col justify-center items-center gap-2.5 overflow-hidden">
               <ChatInput placeholder="질문을 입력하세요" onSubmit={() => {}} />
             </div>
           </div>
 
           {/* 오른쪽 패널 - 정보패널 */}
-          <div className="w-[960px] h-full flex flex-col">
+          <div className="w-[960px] h-[994px] inline-flex flex-col justify-start items-start overflow-hidden">
             {/* 3D 렌더링 창 */}
-            <div className="w-full h-[580px] flex items-center justify-center px-[15px] pt-[15px] pb-[77px] overflow-hidden">
-              <div className="relative w-[1063px] h-[565px]">
-                {/* Blur Layer */}
-                <div className="absolute inset-[-26px]">
-                  <div className="absolute w-[1218px] h-[668px] left-[-50px] top-[-50px] bg-white">
-                    <div className="absolute inset-[76px] bg-black rounded-[34px]" />
+            <div className="w-[960px] h-[580px] px-5 pt-3.5 relative flex flex-col justify-center items-center overflow-hidden">
+              <div className="w-[1063px] h-[565px] left-[15px] top-[15px] absolute">
+                <div className="w-[1115px] h-[617px] left-[-26px] top-[-26px] absolute">
+                  <div className="w-[1215px] h-[717px] left-[-50px] top-[-50px] absolute bg-white">
+                    <div className="w-[1063px] h-[565px] left-[76px] top-[76px] absolute bg-black rounded-[34px]" />
                   </div>
-                  <div className="absolute inset-[31px_26px_21px_26px] bg-black/10 rounded-[34px] blur-[20px] backdrop-blur-2xl mix-blend-hard-light" />
+                  <div className="w-[1063px] h-[565px] left-[26px] top-[31px] absolute bg-blend-hard-light bg-black/10 rounded-[34px] blur-[20px] backdrop-blur-2xl" />
                 </div>
-                
-                {/* Glass Effect */}
-                <div className="absolute inset-0 opacity-[0.67] rounded-tl-[50px] rounded-tr-[50px] rounded-br-[50px] rounded-bl-[10px]">
-                  <div className="absolute inset-0 bg-[#cccccc] mix-blend-color-burn rounded-tl-[50px] rounded-tr-[50px] rounded-br-[50px] rounded-bl-[10px]" />
-                  <div 
-                    className="absolute inset-0 rounded-tl-[50px] rounded-tr-[50px] rounded-br-[50px] rounded-bl-[10px]" 
-                    style={{
-                      background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.03) 100%), linear-gradient(90deg, rgba(183, 183, 183, 0.85) 0%, rgba(183, 183, 183, 0.85) 100%)'
-                    }}
-                  />
+                <div className="w-[1063px] h-[565px] left-0 top-0 absolute opacity-70 bg-white/5 rounded-tl-[50px] rounded-tr-[50px] rounded-bl-[10px] rounded-br-[50px]" />
+                <div className="w-[1063px] h-[565px] left-0 top-0 absolute bg-black/0 rounded-[50px]" />
+                <div className="w-[536px] h-12 left-[212px] top-[443px] absolute">
+                  <div className="w-[536px] h-12 left-0 top-0 absolute bg-zinc-800 rounded-full blur-[30px]" />
                 </div>
-                <div className="absolute inset-0 bg-black/0 rounded-[50px]" />
-                
-                <Render3D isVisible={true} />
               </div>
+              <Render3D isVisible={true} />
             </div>
 
             {/* 제품 정보 창 */}
-            <div className="w-full h-[414px] flex flex-col gap-2.5 px-[15px_25px_17px_15px] pt-[15px] pb-[17px] overflow-hidden">
-              <div className="relative w-[1066px] h-[458px]">
-                {/* Blur Layer */}
-                <div className="absolute inset-[-26px]">
-                  <div className="absolute w-[1218px] h-[610px] left-[-50px] top-[-50px] bg-white">
-                    <div className="absolute inset-[76px] bg-black rounded-[34px]" />
+            <div className="w-[960px] h-96 pl-3.5 pr-6 pt-3.5 pb-4 relative flex flex-col justify-start items-start gap-2.5 overflow-hidden">
+              <div className="w-[1066px] h-[458px] left-[15px] top-[15px] absolute">
+                <div className="w-[1118px] h-[510px] left-[-26px] top-[-26px] absolute">
+                  <div className="w-[1218px] h-[610px] left-[-50px] top-[-50px] absolute bg-white">
+                    <div className="w-[1066px] h-[458px] left-[76px] top-[76px] absolute bg-black rounded-[34px]" />
                   </div>
-                  <div className="absolute inset-[31px_26px_21px_26px] bg-black/10 rounded-[34px] blur-[20px] backdrop-blur-2xl mix-blend-hard-light" />
+                  <div className="w-[1066px] h-[458px] left-[26px] top-[31px] absolute bg-blend-hard-light bg-black/10 rounded-[34px] blur-[20px] backdrop-blur-2xl" />
                 </div>
-                
-                {/* Glass Effect */}
-                <div className="absolute inset-0 opacity-[0.67] rounded-[10px]">
-                  <div className="absolute inset-0 bg-[#cccccc] mix-blend-color-burn rounded-[10px]" />
-                  <div 
-                    className="absolute inset-0 rounded-[10px]" 
-                    style={{
-                      background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.03) 100%), linear-gradient(90deg, rgba(107, 107, 107, 0.85) 0%, rgba(107, 107, 107, 0.85) 100%)'
-                    }}
-                  />
-                </div>
-                <div className="absolute inset-0 bg-black/0 rounded-[10px]" />
-                
-                <div className="relative z-10">
-                  <ProductList products={exampleProducts} />
-                </div>
+                <div className="w-[1066px] h-[458px] left-0 top-0 absolute opacity-70 bg-white/5 rounded-[10px]" />
+                <div className="w-[1066px] h-[458px] left-0 top-0 absolute bg-black/0 rounded-[10px]" />
+              </div>
+              <div className="relative z-10 w-[940px]">
+                <ProductList products={exampleProducts} />
               </div>
             </div>
           </div>

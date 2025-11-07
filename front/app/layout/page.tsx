@@ -70,38 +70,27 @@ function LayoutContent() {
   };
 
   return (
-    <div className="w-screen h-screen fixed inset-0 overflow-hidden bg-black">
+    <div className="w-[1920px] h-[1099px] relative overflow-hidden">
       <BackgroundStars />
-      <div className="relative w-full h-full flex flex-col">
+      <div className="w-[1920px] left-0 top-0 absolute inline-flex flex-col justify-start items-start overflow-hidden">
         <Header />
-        <div className="flex-1 flex w-full overflow-hidden">
+        <div className="w-[1920px] h-[994px] inline-flex justify-between items-center overflow-hidden">
           {/* 왼쪽 패널 - 대화창 */}
-          <div className="w-1/2 h-full flex flex-col p-10 gap-3.5 items-end relative">
-            {/* 대화창 배경 - 전체 화면 대비 비율로 조정 */}
-            <div 
-              className="absolute rounded-[50px] overflow-hidden"
-              style={{
-                left: '-6%',
-                top: '1.5%',
-                width: '106.8%',
-                height: '105.7%'
-              }}
-            >
-              {/* Blur & Glass Effect */}
-              <div className="absolute inset-[-3%]">
-                <div className="absolute inset-[-5%] bg-white">
-                  <div className="absolute inset-[7.4%] bg-black rounded-[34px]" />
+          <div className="w-[960px] h-[994px] px-10 pt-10 relative inline-flex flex-col justify-start items-end gap-3.5">
+            {/* 대화창 배경 */}
+            <div className="w-[1026px] h-[1051px] left-[-61px] top-[15px] absolute">
+              <div className="w-[1078px] h-[1103px] left-[-26px] top-[-26px] absolute">
+                <div className="w-[1178px] h-[1203px] left-[-50px] top-[-50px] absolute bg-white">
+                  <div className="w-[1026px] h-[1051px] left-[76px] top-[76px] absolute bg-black rounded-[34px]" />
                 </div>
-                <div className="absolute inset-[3%_2.5%] bg-black/10 rounded-[34px] blur-[20px] backdrop-blur-2xl mix-blend-hard-light" />
+                <div className="w-[1026px] h-[1051px] left-[26px] top-[31px] absolute bg-blend-hard-light bg-black/10 rounded-[34px] blur-[20px] backdrop-blur-2xl" />
               </div>
-              
-                      <div className="absolute inset-0 opacity-70 rounded-[50px] bg-gradient-to-br from-white/[0.03] to-white/[0.03]">
-                        <div className="absolute inset-0 bg-[#1a1a1a]/90 rounded-[50px]" />
-                      </div>
+              <div className="w-[1026px] h-[1051px] left-0 top-0 absolute opacity-70 bg-white/5 rounded-[50px]" />
+              <div className="w-[1026px] h-[1051px] left-0 top-0 absolute bg-black/0 rounded-[50px]" />
             </div>
-
+            
             {/* 대화 내용 */}
-            <div className="relative z-10 w-full max-w-[880px] flex flex-col items-end gap-3.5 flex-1 overflow-y-auto pr-4">
+            <div className="relative z-10 w-full flex flex-col items-end gap-3.5 flex-1 overflow-y-auto pr-4">
               {question && (
                 <ChatMessage
                   message={question}
@@ -118,7 +107,7 @@ function LayoutContent() {
             </div>
 
             {/* 입력 필드 */}
-            <div className="relative z-10 w-full max-w-[880px] mt-auto">
+            <div className="relative z-10 w-[880px] h-28 py-2.5 left-[40px] top-[852px] absolute flex flex-col justify-center items-center gap-2.5 overflow-hidden">
               <ChatInput
                 placeholder="질문을 입력하세요"
                 onSubmit={handleSubmit}
@@ -127,58 +116,51 @@ function LayoutContent() {
           </div>
 
           {/* 오른쪽 패널 - 정보패널 */}
-          <div className="w-1/2 h-full flex flex-col overflow-hidden">
+          <div className="w-[960px] h-[994px] inline-flex flex-col justify-start items-start overflow-hidden">
             {/* 3D 렌더링 창 */}
             <div 
-              className={`w-full h-[58.4%] flex items-center justify-center p-4 overflow-hidden transition-all duration-700 ease-out ${
+              className={`w-[960px] h-[580px] px-3.5 pt-3.5 relative flex flex-col justify-center items-center overflow-hidden transition-all duration-700 ease-out ${
                 showPanels ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
               }`}
             >
-              <div className="relative w-full h-full max-w-[1063px] max-h-[565px]">
-                {/* Blur & Glass Effect */}
-                <div className="absolute inset-[-2.5%]">
-                  <div className="absolute inset-[-4.6%] bg-white">
-                    <div className="absolute inset-[7.4%] bg-black rounded-[34px]" />
+              <div className="w-[1063px] h-[565px] left-[15px] top-[15px] absolute">
+                <div className="w-[1115px] h-[617px] left-[-26px] top-[-26px] absolute">
+                  <div className="w-[1215px] h-[717px] left-[-50px] top-[-50px] absolute bg-white">
+                    <div className="w-[1063px] h-[565px] left-[76px] top-[76px] absolute bg-black rounded-[34px]" />
                   </div>
-                  <div className="absolute inset-[3%_2.5%] bg-black/10 rounded-[34px] blur-[20px] backdrop-blur-2xl mix-blend-hard-light" />
+                  <div className="w-[1063px] h-[565px] left-[26px] top-[31px] absolute bg-blend-hard-light bg-black/10 rounded-[34px] blur-[20px] backdrop-blur-2xl" />
                 </div>
-                
-                        <div className="absolute inset-0 opacity-70 rounded-tl-[50px] rounded-tr-[50px] rounded-br-[50px] rounded-bl-[10px] bg-gradient-to-br from-white/[0.03] to-white/[0.03]">
-                          <div className="absolute inset-0 bg-[#adadad]/90 rounded-tl-[50px] rounded-tr-[50px] rounded-br-[50px] rounded-bl-[10px]" />
-                        </div>
-                
-                <div className="relative z-10 w-full h-full flex items-center justify-center">
-                  {showPanels && <Render3D isVisible={showPanels} />}
+                <div className="w-[1063px] h-[565px] left-0 top-0 absolute opacity-70 bg-white/5 rounded-tl-[50px] rounded-tr-[50px] rounded-bl-[10px] rounded-br-[50px]" />
+                <div className="w-[1063px] h-[565px] left-0 top-0 absolute bg-black/0 rounded-[50px]" />
+                <div className="w-[536px] h-12 left-[212px] top-[443px] absolute">
+                  <div className="w-[536px] h-12 left-0 top-0 absolute bg-zinc-800 rounded-full blur-[30px]" />
                 </div>
               </div>
+              {showPanels && <Render3D isVisible={showPanels} />}
             </div>
 
             {/* 제품 정보 창 */}
             <div 
-              className={`w-full h-[41.6%] flex flex-col gap-2.5 p-4 overflow-hidden transition-all duration-700 ease-out ${
+              className={`w-[960px] h-96 pl-3.5 pr-6 pt-3.5 pb-4 relative flex flex-col justify-start items-start gap-2.5 overflow-hidden transition-all duration-700 ease-out ${
                 showPanels && products.length > 0
                   ? "translate-y-0 opacity-100"
                   : "translate-y-full opacity-0"
               }`}
             >
-              <div className="relative w-full h-full max-w-[1066px] max-h-[458px] mx-auto">
-                {/* Blur & Glass Effect */}
-                <div className="absolute inset-[-2.5%]">
-                  <div className="absolute inset-[-4.6%] bg-white">
-                    <div className="absolute inset-[7.4%] bg-black rounded-[34px]" />
+              <div className="w-[1066px] h-[458px] left-[15px] top-[15px] absolute">
+                <div className="w-[1118px] h-[510px] left-[-26px] top-[-26px] absolute">
+                  <div className="w-[1218px] h-[610px] left-[-50px] top-[-50px] absolute bg-white">
+                    <div className="w-[1066px] h-[458px] left-[76px] top-[76px] absolute bg-black rounded-[34px]" />
                   </div>
-                  <div className="absolute inset-[3%_2.5%] bg-black/10 rounded-[34px] blur-[20px] backdrop-blur-2xl mix-blend-hard-light" />
+                  <div className="w-[1066px] h-[458px] left-[26px] top-[31px] absolute bg-blend-hard-light bg-black/10 rounded-[34px] blur-[20px] backdrop-blur-2xl" />
                 </div>
-                
-                        <div className="absolute inset-0 opacity-70 rounded-[10px] bg-gradient-to-br from-white/[0.03] to-white/[0.03]">
-                          <div className="absolute inset-0 bg-[#4a4a4a]/90 rounded-[10px]" />
-                        </div>
-                
-                <div className="relative z-10 w-full h-full overflow-y-auto p-4">
-                  {showPanels && products.length > 0 && (
-                    <ProductList products={products} />
-                  )}
-                </div>
+                <div className="w-[1066px] h-[458px] left-0 top-0 absolute opacity-70 bg-white/5 rounded-[10px]" />
+                <div className="w-[1066px] h-[458px] left-0 top-0 absolute bg-black/0 rounded-[10px]" />
+              </div>
+              <div className="relative z-10 w-[940px]">
+                {showPanels && products.length > 0 && (
+                  <ProductList products={products} />
+                )}
               </div>
             </div>
           </div>

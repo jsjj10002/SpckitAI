@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 
 interface HeaderProps {
   className?: string;
@@ -9,39 +8,24 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ className = "" }) => {
   return (
-    <div className={`w-full backdrop-blur-[142px] bg-[rgba(5,5,5,0.01)] border-b border-white/20 sticky top-0 z-50 ${className}`}>
-      <div className="w-full px-[306px] py-4">
-        <div className="w-full flex justify-between items-center">
-          {/* Logo */}
-          <div className="flex gap-[15px] items-center">
-            <div className="w-[40px] h-[40px] relative">
-              <Image 
-                src="/logo-icon.svg" 
-                alt="Spckit AI Logo" 
-                width={40} 
-                height={40}
-                className="w-full h-full"
-              />
+    <div className={`py-4 bg-zinc-950/0 border-b border-white/20 backdrop-blur-[142px] flex flex-col justify-start items-start ${className}`}>
+      <div className="flex flex-col justify-start items-start">
+        <div className="w-[1920px] px-80 py-4 inline-flex justify-between items-center">
+          <div className="w-[1811px] flex justify-between items-center">
+            <div className="flex justify-start items-center gap-3.5">
+              <div className="w-8 h-8 bg-white" />
+              <div className="px-3 py-0.5 flex justify-center items-center gap-2.5">
+                <div className="w-32 text-center justify-start text-white text-2xl font-extralight font-['Noto_Sans']">Spckit AI</div>
+              </div>
             </div>
-            <div className="px-3 py-0.5 flex justify-center items-center">
-              <p className="text-white text-2xl font-extralight font-noto-sans tracking-[-0.432px]">
-                Spckit AI
-              </p>
+            <div className="h-10 flex justify-center items-center gap-6">
+              <div className="px-8 py-3.5 bg-white rounded-[55px] flex justify-center items-center">
+                <div className="text-center justify-start text-black text-base font-medium font-['Poppins']">login</div>
+              </div>
+              <div className="px-8 py-3.5 bg-white rounded-[55px] flex justify-center items-center">
+                <div className="text-center justify-start text-black text-base font-medium font-['Poppins']">Sign up</div>
+              </div>
             </div>
-          </div>
-          
-          {/* Nav Buttons */}
-          <div className="flex gap-6 h-[41px] items-center justify-center">
-            <button className="bg-white px-[34px] py-3.5 rounded-[55px] flex items-center justify-center cursor-pointer hover:opacity-90 transition-opacity">
-              <p className="text-black text-base font-medium font-poppins leading-normal text-center">
-                login
-              </p>
-            </button>
-            <button className="bg-white px-[34px] py-3.5 rounded-[55px] flex items-center justify-center cursor-pointer hover:opacity-90 transition-opacity">
-              <p className="text-black text-base font-medium font-poppins leading-normal text-center">
-                Sign up
-              </p>
-            </button>
           </div>
         </div>
       </div>

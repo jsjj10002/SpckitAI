@@ -12,9 +12,9 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
   className = "",
 }) => {
   return (
-    <div className={`w-full max-w-[577px] min-h-[160px] relative ${className}`}>
-      <div className="absolute inset-[10px_0_0_0] neumorphic-panel-dark rounded-[50px]" />
-      <div className="relative px-8 py-7 text-zinc-100/95 text-xl font-normal font-noto-sans-kr leading-[2.5] tracking-wide break-words z-10">
+    <div className={`w-[577px] h-40 relative overflow-hidden ${className}`}>
+      <div className="w-[577px] h-36 left-0 top-[10px] absolute bg-zinc-800 rounded-[50px] shadow-[inset_12px_12px_24px_0px_rgba(30,30,30,1.00)] shadow-[inset_-12px_-12px_24px_0px_rgba(62,62,62,1.00)]" />
+      <div className="w-[515px] h-28 left-[31px] top-[27px] absolute justify-center text-zinc-100/95 text-2xl font-normal font-['Noto_Sans_KR'] leading-10 tracking-wide">
         {message}
       </div>
     </div>
