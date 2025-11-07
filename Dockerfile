@@ -4,11 +4,11 @@ FROM node:20-alpine AS builder
 # 작업 디렉토리 설정
 WORKDIR /app
 
-# package.json과 package-lock.json 복사
+# package.json과 package-lock.json 복사 (있는 경우)
 COPY package*.json ./
 
-# 의존성 설치
-RUN npm ci
+# 의존성 설치 (package-lock.json이 있으면 npm ci, 없으면 npm install)
+RUN if [ -f package-lock.json ]; then npm ci; else npm install --production=false; fi
 
 # 소스 코드 복사
 COPY . .
