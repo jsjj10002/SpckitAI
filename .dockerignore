@@ -43,8 +43,9 @@ docs
 *.pdf
 test.txt
 
-# SQL 파일 (프로덕션에 불필요)
-sql
+# SQL 파일 (프로덕션에 불필요, 백엔드에서 필요시 별도 처리)
+backend/data/*.sql
+backend/data/*.pdf
 
 # 연구 파일
 research

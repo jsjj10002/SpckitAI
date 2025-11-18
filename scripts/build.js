@@ -1,6 +1,6 @@
 /**
  * 빌드 스크립트
- * front_v2의 파일들을 dist 폴더로 복사한다
+ * frontend의 파일들을 dist 폴더로 복사한다
  */
 
 import fs from 'fs';
@@ -10,7 +10,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const sourceDir = path.join(__dirname, '..', 'front_v2');
+const sourceDir = path.join(__dirname, '..', 'frontend');
 const distDir = path.join(__dirname, '..', 'dist');
 
 /**
@@ -57,7 +57,7 @@ function build() {
     fs.rmSync(distDir, { recursive: true, force: true });
   }
 
-  // front_v2 폴더를 dist로 복사
+  // frontend 폴더를 dist로 복사
   console.log('📁 파일 복사 중...');
   copyDirectory(sourceDir, distDir);
 

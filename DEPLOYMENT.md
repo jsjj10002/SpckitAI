@@ -6,7 +6,7 @@ Spckit AI v2 배포를 위한 가이드입니다.
 
 - [ ] Gemini API 키가 환경 변수로 설정되어 있는지 확인
 - [ ] 프로덕션 빌드 테스트 완료
-- [ ] 모든 이미지 파일이 `front_v2/images/` 에 있는지 확인
+- [ ] 모든 이미지 파일이 `frontend/images/` 에 있는지 확인
 - [ ] CORS 설정 확인 (Gemini API 호출)
 
 ## 📦 빌드
@@ -37,7 +37,7 @@ vercel login
 - Output Directory: `dist`
 
 3. **환경 변수 설정**
-- `VITE_API_KEY`: Gemini API 키
+- `VITE_GEMINI_API_KEY`: Gemini API 키
 
 4. **배포**
 ```bash
@@ -70,7 +70,7 @@ netlify deploy --prod
 ```
 
 3. **환경 변수 설정** (Netlify 대시보드)
-- `VITE_API_KEY`: Gemini API 키
+- `VITE_GEMINI_API_KEY`: Gemini API 키
 
 ### GitHub Pages 배포
 

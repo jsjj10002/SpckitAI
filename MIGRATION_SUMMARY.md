@@ -56,7 +56,7 @@
 - React 관련 의존성 제거
 
 ### ✅ 7. 문서화
-- `front_v2/README.md`: 프론트엔드 v2 가이드
+- `frontend/README.md`: 프론트엔드 가이드
 - `CHANGELOG.md`: 버전 변경 이력
 - `DEPLOYMENT.md`: 배포 가이드
 - `.env.example`: 환경 변수 예시
@@ -84,7 +84,7 @@
 
 ```
 SpckitAI/
-├── front_v2/                    # 새 프론트엔드 (v2)
+├── frontend/                    # 프론트엔드 (HTML/CSS/JavaScript)
 │   ├── index.html              # ✅ 랜딩 페이지
 │   ├── builder.html            # ✅ 빌더 페이지 (4분할)
 │   ├── landing.css             # ✅ 랜딩 스타일
@@ -98,7 +98,11 @@ SpckitAI/
 │   │   └── round.png           # 배경 이미지
 │   └── README.md               # ✅ 프론트엔드 가이드
 │
-├── old_react_frontend/          # ✅ 구 React 프론트엔드 (백업)
+├── backend/                    # 백엔드 (향후 개발)
+│   └── prompts/                # 프롬프트 관리
+│
+├── backup/                     # 백업 디렉토리
+│   └── old_react_frontend/     # ✅ 구 React 프론트엔드 (백업)
 │   ├── App.tsx
 │   ├── index.tsx
 │   ├── types.ts

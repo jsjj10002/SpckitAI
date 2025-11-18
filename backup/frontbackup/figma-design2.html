@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Bolt.new 스타일 - 공학계산기 서비스</title>
+  <link rel="stylesheet" href="./figma-design2.css">
+</head>
+<body>
+  <!-- 전체 컨테이너 -->
+  <div class="app-container">
+    <!-- 헤더: 브레드크럼과 네비게이션 -->
+    <header class="header">
+      <div class="breadcrumb">
+        <button class="breadcrumb-btn">
+          <svg class="icon-bolt" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M13 2L3 14h8l-1 8 10-12h-8l1-8z"/>
+          </svg>
+        </button>
+        <span class="separator">/</span>
+        <button class="breadcrumb-btn avatar-btn">
+          <img src="https://i.pravatar.cc/24?img=12" alt="User" class="avatar">
+          <svg class="icon-chevron" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M4 6l4 4 4-4"/>
+          </svg>
+        </button>
+        <span class="separator">/</span>
+        <div class="breadcrumb-title">
+          <span>Engineering Calculator Service</span>
+          <svg class="icon-external" width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+            <path d="M11 3v8M3 11h8"/>
+          </svg>
+        </div>
+      </div>
+    </header>
+
+    <!-- 메인 콘텐츠 영역 -->
+    <div class="main-content">
+      <!-- 왼쪽: 채팅 영역 -->
+      <aside class="chat-panel">
+        <!-- 채팅 메시지 영역 -->
+        <div class="chat-messages">
+          <div class="message user-message">
+            <div class="message-bubble">공학계산기 서비스</div>
+          </div>
+          <div class="message ai-message">
+            <div class="message-header">
+              <svg class="icon-bolt-small" width="40" height="14" viewBox="0 0 40 14" fill="currentColor">
+                <text x="0" y="12" font-size="14" font-family="Inter" font-weight="700">Bolt</text>
+              </svg>
+              <button class="message-action">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                  <circle cx="8" cy="8" r="2"/>
+                </svg>
+              </button>
+            </div>
+            <div class="thinking-indicator">
+              <svg class="spinner" width="18" height="18" viewBox="0 0 18 18">
+                <circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="2" fill="none" opacity="0.3"/>
+              </svg>
+              <span class="thinking-text">Thinking...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 채팅 입력 영역 (sticky) -->
+        <div class="chat-input-area">
+          <!-- 토큰 정보 바 -->
+          <div class="token-bar">
+            <span class="token-text">42K daily tokens remaining.</span>
+            <button class="upgrade-btn">Switch to Pro for 33x more usage</button>
+            <button class="close-btn">×</button>
+          </div>
+
+          <!-- 입력 박스 -->
+          <div class="input-container">
+            <textarea class="chat-textarea" placeholder="How can Bolt help you today? (or /command)" rows="3"></textarea>
+            <div class="input-actions">
+              <button class="action-btn attach-btn">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M14 8a6 6 0 11-12 0 6 6 0 0112 0z"/>
+                </svg>
+              </button>
+              <div class="action-group">
+                <button class="pill-btn">Select</button>
+                <button class="pill-btn">Plan</button>
+              </div>
+              <button class="send-btn">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="white">
+                  <path d="M2 2l12 6-12 6V9l8-1-8-1V2z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- 오른쪽: 코드 에디터 및 프리뷰 영역 -->
+      <main class="editor-panel">
+
+
+        <!-- 에디터 본문 -->
+        <div class="editor-body">
+          <!-- 파일 트리 -->
+          <div class="file-tree">
+            <div class="file-tree-header">
+              <button class="tab active">Files</button>
+              <button class="tab">Search</button>
+            </div>
+            <div class="file-list">
+            </div>
+          </div>
+
+          <!-- 코드 에디터 -->
+          <div class="code-editor">
+            <div class="editor-tab-bar">
+              <!-- 탭 영역은 비워둠 -->
+            </div>
+            <div class="editor-content">
+              <div class="line-numbers">
+                <span>1</span>
+              </div>
+              <div class="code-area">
+                <!-- 코드 입력 영역 (비어있음) -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 하단 터미널 -->
+        <div class="terminal-panel">
+          <div class="terminal-tabs">
+            <button class="terminal-tab active">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="white">
+                <path d="M3 5l4 4-4 4"/>
+              </svg>
+              Bolt
+            </button>
+            <button class="terminal-tab">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
+                <rect x="3" y="3" width="12" height="12" rx="2"/>
+              </svg>
+              Publish Output
+            </button>
+            <button class="terminal-tab">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
+                <path d="M3 6h12M3 12h12"/>
+              </svg>
+              Terminal
+            </button>
+            <button class="terminal-action">+</button>
+            <button class="terminal-action close">×</button>
+          </div>
+          <div class="terminal-content">
+            <div class="terminal-line success">
+              <span class="bold">VITE</span> v5.4.8 ready in <span class="bold">3250</span> ms
+            </div>
+            <div class="terminal-line">
+              <span class="arrow">➜</span> <span class="bold">Local</span>:   <span class="link">http://localhost:<span class="bold">5173</span>/</span>
+            </div>
+            <div class="terminal-line muted">
+              <span class="arrow">➜</span> <span class="bold">Network</span>: use <span class="bold">--host</span> to expose
+            </div>
+            <div class="terminal-line muted">
+              <span class="arrow">➜</span> press <span class="bold">h + enter</span> to show help
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
