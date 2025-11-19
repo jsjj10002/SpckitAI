@@ -25,6 +25,11 @@ cd "$(dirname "$0")"
 # Python이 설치되어 있는지 확인
 if ! command -v python3 &> /dev/null; then
     echo "[오류] Python이 설치되어 있지 않습니다."
+    echo ""
+    echo "진단 정보:"
+    echo "  - command -v python3 결과: $(command -v python3)"
+    echo "  - python3 --version 결과: $(python3 --version 2>&1)"
+    echo ""
     echo "Python 3.10 이상을 설치해주세요: https://www.python.org/downloads/"
     exit 1
 fi

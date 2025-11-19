@@ -1,41 +1,72 @@
 @echo off
 chcp 65001 > nul
 REM ========================================
-REM Spckit AI 개발 환경 자동 설정 스크립트
+REM Spckit AI Setup Script
 REM ========================================
 REM
-REM 이 스크립트는 다음을 자동으로 수행합니다:
-REM   1. uv 설치 확인 및 설치
-REM   2. 가상 환경 생성
-REM   3. 의존성 설치
-REM   4. 환경 변수 파일 생성
-REM   5. 벡터 DB 초기화 (선택사항)
+REM This script automatically sets up the development environment:
+REM   1. Check and install uv
+REM   2. Create virtual environment
+REM   3. Install dependencies
+REM   4. Create .env file
+REM   5. Initialize Vector DB (optional)
 REM
 
 echo.
 echo ========================================
-echo   Spckit AI 개발 환경 자동 설정
+echo   Spckit AI Development Setup
 echo ========================================
 echo.
-echo 이 스크립트는 개발 환경을 자동으로 설정합니다.
+echo This script will automatically set up your development environment.
 echo.
 
 REM 프로젝트 루트로 이동
 cd /d "%~dp0"
 
-REM Python이 설치되어 있는지 확인
-python --version >nul 2>&1
-if errorlevel 1 (
-    echo [오류] Python이 설치되어 있지 않습니다.
-    echo Python 3.10 이상을 설치해주세요: https://www.python.org/downloads/
-    pause
-    exit /b 1
+REM Python 확인
+echo [INFO] Checking Python installation...
+set PYTHON_CMD=python
+
+where python >nul 2>&1
+if %errorlevel% equ 0 goto :PYTHON_FOUND
+
+where py >nul 2>&1
+if %errorlevel% equ 0 (
+    set PYTHON_CMD=py
+    goto :PYTHON_FOUND
 )
 
-REM setup_dev.py 실행
-echo [정보] Python 스크립트를 실행합니다...
+where python3 >nul 2>&1
+if %errorlevel% equ 0 (
+    set PYTHON_CMD=python3
+    goto :PYTHON_FOUND
+)
+
+:PYTHON_MISSING
 echo.
-python backend\scripts\setup_dev.py
+echo [ERROR] Python not found.
+echo.
+echo Diagnostic Info:
+echo   - where python result:
+where python
+echo   - where py result:
+where py
+echo   - where python3 result:
+where python3
+echo.
+echo Python 3.10+ is required.
+echo Install: https://www.python.org/downloads/
+echo.
+pause
+exit /b 1
+
+:PYTHON_FOUND
+echo [INFO] Python found: %PYTHON_CMD%
+
+REM setup_dev.py 실행
+echo [INFO] Running setup script...
+echo.
+%PYTHON_CMD% backend\scripts\setup_dev.py
 
 if errorlevel 1 (
     echo.

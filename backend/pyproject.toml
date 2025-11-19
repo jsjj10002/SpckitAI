@@ -5,7 +5,7 @@ description = "PC 부품 추천 RAG 시스템 백엔드"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "google-generativeai>=0.8.0",
+    "google-genai>=0.1.0",
     "chromadb>=0.5.0",
     "pandas>=2.0.0",
     "numpy>=1.24.0",

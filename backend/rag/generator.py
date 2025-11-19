@@ -1,7 +1,8 @@
 """
-Gemini API를 사용한 추천 응답 생성기
+Gemini API를 사용한 추천 응답 생성기 (New SDK)
 """
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 from typing import List, Dict, Any, Optional
 from loguru import logger
 import json
@@ -28,11 +29,10 @@ class PCRecommendationGenerator:
         self.model_name = model
         self.temperature = temperature
 
-        # Gemini API 설정
-        genai.configure(api_key=self.api_key)
-        self.model = genai.GenerativeModel(model_name=self.model_name)
-
-        logger.info(f"PCRecommendationGenerator 초기화: model={model}")
+        # Gemini API 클라이언트 초기화 (google-genai SDK)
+        self.client = genai.Client(api_key=self.api_key)
+        
+        logger.info(f"PCRecommendationGenerator 초기화: model={model} (SDK: google-genai)")
 
     def generate_recommendation(
         self,
@@ -42,14 +42,6 @@ class PCRecommendationGenerator:
     ) -> Dict[str, Any]:
         """
         사용자 쿼리와 검색된 부품 정보를 기반으로 추천 생성
-
-        Args:
-            user_query: 사용자 쿼리
-            retrieved_components: 검색된 부품 리스트
-            system_instruction: 시스템 지시사항
-
-        Returns:
-            추천 응답 딕셔너리
         """
         # 컨텍스트 구성
         context = self._build_context(retrieved_components)
@@ -59,9 +51,10 @@ class PCRecommendationGenerator:
 
         try:
             # Gemini API 호출
-            response = self.model.generate_content(
-                prompt,
-                generation_config=genai.GenerationConfig(
+            response = self.client.models.generate_content(
+                model=self.model_name,
+                contents=prompt,
+                config=types.GenerateContentConfig(
                     temperature=self.temperature,
                     max_output_tokens=2048,
                     response_mime_type="application/json",
@@ -76,11 +69,12 @@ class PCRecommendationGenerator:
 
         except json.JSONDecodeError as e:
             logger.error(f"JSON 파싱 실패: {str(e)}")
-            # JSON이 아닌 경우 텍스트 그대로 반환
+            # JSON이 아닌 경우 텍스트 그대로 반환 시도
             return {
-                "analysis": response.text,
+                "analysis": getattr(response, 'text', "응답을 처리할 수 없습니다."),
                 "components": [],
-                "total_price": 0,
+                "total_price": "0",
+                "additional_notes": "JSON 형식이 아닙니다."
             }
         except Exception as e:
             logger.error(f"추천 생성 실패: {str(e)}")
@@ -89,12 +83,6 @@ class PCRecommendationGenerator:
     def _build_context(self, components: List[Dict[str, Any]]) -> str:
         """
         검색된 부품 정보를 컨텍스트 문자열로 변환
-
-        Args:
-            components: 부품 리스트
-
-        Returns:
-            컨텍스트 문자열
         """
         if not components:
             return "검색된 부품이 없습니다."
@@ -130,14 +118,6 @@ class PCRecommendationGenerator:
     ) -> str:
         """
         프롬프트 생성
-
-        Args:
-            user_query: 사용자 쿼리
-            context: 컨텍스트 (검색된 부품 정보)
-            system_instruction: 시스템 지시사항
-
-        Returns:
-            프롬프트 문자열
         """
         default_instruction = """당신은 'Spckit AI'입니다. 사용자의 요구사항, 예산, 사용 목적에 따라 맞춤형 PC 부품을 추천하는 전문 AI 어시스턴트입니다. 
 항상 한국어로 답변하고, 검색된 부품 정보를 기반으로 정확하고 상세한 추천을 제공하세요."""
@@ -159,12 +139,12 @@ class PCRecommendationGenerator:
         {{
             "category": "부품 카테고리",
             "name": "제품명",
-            "price": "예상 가격 (만원)",
+            "price": "예상 가격 (만원 또는 원)",
             "features": ["특징1", "특징2", "특징3"],
             "why_recommended": "추천 이유"
         }}
     ],
-    "total_price": "총 예상 가격 (만원)",
+    "total_price": "총 예상 가격",
     "additional_notes": "추가 조언 및 주의사항"
 }}
 
@@ -178,12 +158,6 @@ class PCRecommendationGenerator:
     ) -> Dict[str, Any]:
         """
         여러 부품을 비교 분석
-
-        Args:
-            components_to_compare: 비교할 부품 리스트
-
-        Returns:
-            비교 결과 딕셔너리
         """
         context = self._build_context(components_to_compare)
 
@@ -208,9 +182,10 @@ class PCRecommendationGenerator:
 }}"""
 
         try:
-            response = self.model.generate_content(
-                prompt,
-                generation_config=genai.GenerationConfig(
+            response = self.client.models.generate_content(
+                model=self.model_name,
+                contents=prompt,
+                config=types.GenerateContentConfig(
                     temperature=0.5,
                     max_output_tokens=2048,
                     response_mime_type="application/json",
@@ -222,4 +197,3 @@ class PCRecommendationGenerator:
         except Exception as e:
             logger.error(f"비교 분석 실패: {str(e)}")
             raise
-

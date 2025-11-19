@@ -1,128 +1,108 @@
 /**
  * API 통신 모듈
- * Gemini AI와 통신하여 PC 부품 추천을 받는다
+ * FastAPI 백엔드 API 서버와 연결하여 추천 결과를 가져옵니다.
+ * Vite 환경 변수에 `VITE_API_BASE_URL`이 설정되어 있으면 해당 값을 우선 사용합니다.
  */
+const DEFAULT_API_BASE_URL = 'http://localhost:8000';
 
-import { SYSTEM_INSTRUCTION, buildUserPrompt } from './prompts.js';
-
-/**
- * Gemini API 키 가져오기
- * 우선순위: VITE_GEMINI_API_KEY > GEMINI_API_KEY (환경 변수)
- * 개발 환경: .env.local의 GEMINI_API_KEY 사용
- * 프로덕션: 배포 플랫폼의 환경 변수 사용
- */
-const API_KEY = (() => {
-  // Vite 환경 변수에서 읽기 (VITE_ 접두사가 있는 변수)
+const API_BASE_URL = (() => {
   if (typeof import.meta !== 'undefined' && import.meta.env) {
-    // VITE_GEMINI_API_KEY 우선 사용
-    if (import.meta.env.VITE_GEMINI_API_KEY) {
-      return import.meta.env.VITE_GEMINI_API_KEY;
-    }
-    // VITE_API_KEY도 확인 (기존 호환성)
-    if (import.meta.env.VITE_API_KEY) {
-      return import.meta.env.VITE_API_KEY;
+    const candidate = import.meta.env.VITE_API_BASE_URL;
+    if (typeof candidate === 'string' && candidate.trim()) {
+      return candidate.trim();
     }
   }
-  
-  // 환경 변수가 없으면 에러 발생 (보안상 하드코딩된 키 제거)
-  console.error('GEMINI_API_KEY가 설정되지 않았습니다. .env.local 파일에 GEMINI_API_KEY를 설정하거나 배포 환경 변수를 설정하세요.');
-  throw new Error('GEMINI_API_KEY가 설정되지 않았습니다.');
+  return DEFAULT_API_BASE_URL;
 })();
 
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent';
+const API_HEADERS = {
+  'Content-Type': 'application/json',
+};
 
-/**
- * Gemini AI에 PC 부품 추천 요청
- * @param {string} userMessage - 사용자 메시지
- * @returns {Promise<{analysis: string, components: Array}>} AI 응답
- */
-export async function getPCRecommendation(userMessage) {
+async function fetchBackendRecommendation(payload) {
+  const url = `${API_BASE_URL}/query`;
+
+  let response;
   try {
-    // 프롬프트 모듈에서 프롬프트 가져오기
-    const userPrompt = buildUserPrompt(userMessage);
-    
-    const response = await fetch(`${GEMINI_API_URL}?key=${API_KEY}`, {
+    response = await fetch(url, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        contents: [{
-          parts: [{
-            text: userPrompt
-          }]
-        }],
-        generationConfig: {
-          temperature: 0.7,
-          topK: 40,
-          topP: 0.95,
-          maxOutputTokens: 2048,
-          responseMimeType: "application/json"
-        },
-        systemInstruction: {
-          parts: [{
-            text: SYSTEM_INSTRUCTION
-          }]
-        }
-      })
+      headers: API_HEADERS,
+      body: JSON.stringify(payload),
     });
-
-    if (!response.ok) {
-      throw new Error(`API 오류: ${response.status} ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    
-    // Gemini 응답 파싱
-    if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
-      throw new Error('응답 형식이 올바르지 않습니다');
-    }
-
-    const textContent = data.candidates[0].content.parts[0].text;
-    const parsedResponse = JSON.parse(textContent);
-
-    // 응답 검증
-    if (!parsedResponse.analysis || !Array.isArray(parsedResponse.components)) {
-      throw new Error('응답 데이터 구조가 올바르지 않습니다');
-    }
-
-    // 부품 데이터 검증 및 필터링
-    const validComponents = parsedResponse.components.filter(comp => {
-      return comp && 
-             typeof comp.category === 'string' &&
-             typeof comp.name === 'string' &&
-             typeof comp.price === 'string' &&
-             Array.isArray(comp.features);
-    });
-
-    return {
-      analysis: parsedResponse.analysis,
-      components: validComponents
-    };
-
   } catch (error) {
-    console.error('API 호출 오류:', error);
-    throw new Error('AI로부터 응답을 받는데 실패했습니다. 잠시 후 다시 시도해주세요.');
+    console.error('[API] 백엔드 서버 연결 실패', error);
+    throw new Error('백엔드 서버에 연결할 수 없습니다. 서버가 실행 중인지 확인하세요.');
   }
+
+  if (!response.ok) {
+    const text = await response.text();
+    console.error(`[API] ${response.status} ${response.statusText}: ${text}`);
+    throw new Error('백엔드 API가 오류를 반환했습니다. 콘솔 로그를 확인하세요.');
+  }
+
+  return response.json();
 }
 
 /**
- * 가격 문자열에서 숫자 추출
- * @param {string} priceStr - 가격 문자열 (예: "약 450,000원")
- * @returns {number} 숫자 가격
+ * 사용자의 질문을 FastAPI `/query` 엔드포인트로 전달하고
+ * 추천 결과를 반환합니다.
+ */
+export async function getPCRecommendation(userMessage, options = {}) {
+  const query = (userMessage || '').trim();
+  if (!query) {
+    throw new Error('질문을 입력해주세요.');
+  }
+
+  const sanitizedTopK =
+    typeof options.top_k === 'number'
+      ? Math.max(1, Math.min(20, Math.floor(options.top_k)))
+      : 5;
+
+  const payload = {
+    query,
+    top_k: sanitizedTopK,
+    category: options.category,
+    include_context: options.include_context ?? false,
+  };
+
+  const data = await fetchBackendRecommendation(payload);
+
+  const recommendation = data?.recommendation ?? data;
+  if (!recommendation || typeof recommendation !== 'object') {
+    console.error('[API] 추천 응답이 유효하지 않습니다.', data);
+    throw new Error('백엔드에서 추천 데이터를 받아올 수 없습니다.');
+  }
+
+  if (!Array.isArray(recommendation.components)) {
+    console.warn('[API] 컴포넌트 리스트가 없습니다.', recommendation);
+    recommendation.components = [];
+  }
+
+  return recommendation;
+}
+
+/**
+ * 가격 문자열에서 정수만 추출합니다.
  */
 export function extractPrice(priceStr) {
-  if (!priceStr) return 0;
-  const numbers = priceStr.replace(/[^\d]/g, '');
-  return parseInt(numbers, 10) || 0;
+  if (!priceStr || typeof priceStr !== 'string') {
+    return 0;
+  }
+
+  const digits = priceStr.replace(/[^\d]/g, '');
+  const parsed = parseInt(digits, 10);
+  return Number.isNaN(parsed) ? 0 : parsed;
 }
 
 /**
- * 숫자를 원화 형식으로 변환
- * @param {number} price - 숫자 가격
- * @returns {string} 포맷된 가격 문자열
+ * 숫자를 원화 문자열로 포맷합니다.
  */
 export function formatPrice(price) {
-  return price.toLocaleString('ko-KR') + '원';
+  const numeric = typeof price === 'number' ? price : extractPrice(price);
+  if (numeric === 0) {
+    return '0원';
+  }
+  return `${numeric.toLocaleString('ko-KR')}원`;
 }
 
+export { API_BASE_URL };

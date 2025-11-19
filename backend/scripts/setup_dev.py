@@ -104,6 +104,7 @@ def create_env_file(api_key: str, env_path: Path):
     env_content = f"""# Gemini API 설정
 # Google AI Studio (https://aistudio.google.com/app/apikey)에서 발급받으세요
 GEMINI_API_KEY={api_key.strip()}
+VITE_GEMINI_API_KEY={api_key.strip()}
 
 # 환경 설정 (development, staging, production)
 ENVIRONMENT=development
@@ -120,7 +121,7 @@ AUTO_INIT_DB=true
 # EMBEDDING_MODEL=models/text-embedding-004
 
 # 생성 모델 설정 (선택사항)
-# GENERATION_MODEL=gemini-2.0-flash-exp
+# GENERATION_MODEL=gemini-3.0-pro
 
 # 로그 레벨 (DEBUG, INFO, WARNING, ERROR)
 LOG_LEVEL=INFO
@@ -155,10 +156,10 @@ def main():
     
     backend_dir = project_root / "backend"
     venv_dir = backend_dir / ".venv"
-    env_file = backend_dir / ".env"
+    env_file = project_root / ".env"
     
     step = 1
-    total_steps = 5
+    total_steps = 4
     
     # 1단계: uv 설치 확인
     print_step(step, total_steps, "uv 설치 확인 중...")
@@ -233,9 +234,9 @@ def main():
     print_step(step, total_steps, "환경 변수 파일 설정 중...")
     step += 1
     
-    # 백엔드 .env 파일
+    # 통합 .env 파일
     if env_file.exists():
-        print_warning("backend/.env 파일이 이미 존재합니다.")
+        print_warning(".env 파일이 이미 존재합니다.")
         overwrite = get_user_input("덮어쓰시겠습니까? (y/n)", "n")
         if overwrite.lower() != "y":
             print_info("기존 .env 파일을 유지합니다.")
@@ -258,7 +259,7 @@ def main():
             
             if not create_env_file(api_key, env_file):
                 return False
-            print_success("backend/.env 파일 생성 완료!")
+            print_success(".env 파일 생성 완료!")
     else:
         print_info("Gemini API 키가 필요합니다.")
         print_info("발급 방법: https://aistudio.google.com/app/apikey")
@@ -271,23 +272,10 @@ def main():
         
         if not create_env_file(api_key, env_file):
             return False
-        print_success("backend/.env 파일 생성 완료!")
-    
-    # 프로젝트 루트 .env.local 파일 (프론트엔드용)
-    env_local_file = project_root / ".env.local"
-    if api_key:
-        env_local_content = f"""# Frontend 환경 변수
-VITE_GEMINI_API_KEY={api_key}
-GEMINI_API_KEY={api_key}
-"""
-        try:
-            env_local_file.write_text(env_local_content, encoding="utf-8")
-            print_success(".env.local 파일 생성 완료! (프론트엔드용)")
-        except Exception as e:
-            print_warning(f".env.local 파일 생성 실패: {str(e)}")
-            print_info("수동으로 생성해주세요.")
-    
-    # 5단계: 벡터 DB 초기화 확인
+        print_success(".env 파일 생성 완료!")
+
+    # 5단계: 벡터 DB 초기화 확인 (이전 단계 유지)
+
     print_step(step, total_steps, "벡터 데이터베이스 확인 중...")
     
     chroma_db_dir = backend_dir / "chroma_db"

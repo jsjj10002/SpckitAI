@@ -27,7 +27,7 @@ if [ ! -f "backend/.venv/bin/activate" ]; then
 fi
 
 # .env 파일 확인
-if [ ! -f "backend/.env" ]; then
+if [ ! -f ".env" ]; then
     echo ""
     echo "[경고] .env 파일이 없습니다."
     echo ""
@@ -40,6 +40,10 @@ fi
 if ! command -v node &> /dev/null; then
     echo ""
     echo "[경고] Node.js가 설치되어 있지 않습니다."
+    echo ""
+    echo "진단 정보:"
+    echo "  - command -v node 결과: $(command -v node)"
+    echo "  - node --version 결과: $(node --version 2>&1)"
     echo ""
     echo "프론트엔드 서버를 실행하려면 Node.js가 필요합니다."
     echo "설치: https://nodejs.org/"
