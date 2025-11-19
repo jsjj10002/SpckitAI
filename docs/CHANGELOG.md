@@ -18,7 +18,7 @@
 - 📦 FastAPI 기반 REST API 구조 (`backend/api/main.py`)
 - 📦 uv 패키지 관리자 도입
 - 📦 `pyproject.toml` 기반 Python 프로젝트 설정
-- 📦 Windows 배치 스크립트 (`run_init.bat`, `run_test.bat`)
+- 📦 Windows 배치 스크립트 (`run_dev.bat`, `run_test.bat` - 프로젝트 루트로 이동)
 - 📦 종합 테스트 스크립트 (`backend/scripts/test_rag.py`)
 
 #### 문서화
