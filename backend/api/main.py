@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field
 from typing import Optional, List, Dict, Any
 from loguru import logger
 import sys
+import os
 
 from backend.rag.pipeline import RAGPipeline
 
@@ -63,14 +64,68 @@ class CompareRequest(BaseModel):
 # 이벤트 핸들러
 @app.on_event("startup")
 async def startup_event():
-    """앱 시작 시 RAG 파이프라인 초기화"""
+    """앱 시작 시 RAG 파이프라인 초기화 및 벡터 DB 자동 초기화"""
     global pipeline
-    logger.info("RAG 파이프라인 초기화 중...")
+    logger.info("=" * 60)
+    logger.info("🚀 RAG 파이프라인 초기화 중...")
+    logger.info("=" * 60)
+    
     try:
+        # 환경 확인
+        environment = os.getenv("ENVIRONMENT", "development")
+        auto_init = os.getenv("AUTO_INIT_DB", "true" if environment == "development" else "false")
+        auto_init = auto_init.lower() == "true"
+        
+        # RAG 파이프라인 초기화
         pipeline = RAGPipeline()
-        logger.success("RAG 파이프라인 초기화 완료")
+        
+        # 벡터 DB 상태 확인
+        try:
+            stats = pipeline.get_stats()
+            doc_count = stats.get("total_documents", 0)
+        except Exception:
+            doc_count = 0
+        
+        # 벡터 DB가 비어있고 자동 초기화가 활성화된 경우
+        if doc_count == 0:
+            if auto_init:
+                logger.warning("⚠️  벡터 데이터베이스가 비어있습니다.")
+                logger.info("🔧 개발 모드: 자동 초기화를 시작합니다...")
+                logger.info("⏱️  이 작업은 약 10-15분이 소요될 수 있습니다.")
+                logger.info("📊 135,660개의 문서를 임베딩하는 중입니다...")
+                logger.info("")
+                
+                try:
+                    result = pipeline.initialize_database(force_rebuild=True)
+                    logger.info("")
+                    logger.success("✅ 벡터 데이터베이스 초기화 완료!")
+                    logger.info(f"📈 총 문서 수: {result.get('total_documents', 0)}개")
+                except Exception as init_error:
+                    logger.error("❌ 벡터 DB 자동 초기화 실패")
+                    logger.error(f"오류 내용: {str(init_error)}")
+                    logger.error("")
+                    logger.error("수동으로 초기화하려면 다음 명령어를 실행하세요:")
+                    logger.error("  python backend/scripts/init_database.py")
+                    raise RuntimeError(f"벡터 DB 자동 초기화 실패: {str(init_error)}")
+            else:
+                logger.error("❌ 벡터 데이터베이스가 비어있습니다!")
+                logger.error("")
+                logger.error("다음 명령어로 수동 초기화하세요:")
+                logger.error("  python backend/scripts/init_database.py")
+                logger.error("")
+                logger.error("또는 환경 변수를 설정하세요:")
+                logger.error("  AUTO_INIT_DB=true")
+                raise RuntimeError("벡터 데이터베이스가 초기화되지 않았습니다.")
+        else:
+            logger.success(f"✅ RAG 파이프라인 초기화 완료!")
+            logger.info(f"📊 벡터 DB 문서 수: {doc_count}개")
+        
+        logger.info("=" * 60)
+        
     except Exception as e:
-        logger.error(f"RAG 파이프라인 초기화 실패: {str(e)}")
+        logger.error("=" * 60)
+        logger.error(f"❌ RAG 파이프라인 초기화 실패: {str(e)}")
+        logger.error("=" * 60)
         raise
 
 

@@ -63,7 +63,7 @@ class PCComponentVectorStore:
     def add_documents(
         self,
         documents: List[Dict[str, Any]],
-        batch_size: int = 100,
+        batch_size: int = 500,
     ) -> None:
         """
         문서들을 벡터 데이터베이스에 추가

@@ -1,6 +1,58 @@
 # 빠른 시작 가이드
 
-## 🚀 5분 안에 RAG 시스템 실행하기
+## 🚀 자동 설정 (권장) - 5분 안에 완료!
+
+팀원 개발자들을 위한 **완전 자동화된 설정 스크립트**를 제공합니다.
+
+### Windows 사용자
+
+```bash
+# 1. 저장소 클론 후 프로젝트 루트에서 실행
+setup_dev.bat
+```
+
+이 스크립트가 자동으로:
+- ✅ uv 설치 확인 및 설치
+- ✅ 가상 환경 생성
+- ✅ 의존성 설치
+- ✅ .env 파일 생성 (API 키 입력)
+- ✅ 벡터 DB 초기화 (선택사항)
+
+### Linux/Mac 사용자
+
+```bash
+# 실행 권한 부여 (최초 1회)
+chmod +x setup_dev.sh
+
+# 실행
+./setup_dev.sh
+```
+
+### 설정 완료 후
+
+```bash
+# Windows - 백엔드와 프론트엔드를 모두 실행합니다
+run_dev.bat
+
+# Linux/Mac
+chmod +x run_dev.sh
+./run_dev.sh
+```
+
+**서버가 시작되면:**
+- 🌐 **웹 페이지**: http://localhost:3000 (프론트엔드)
+- 🔧 **백엔드 API**: http://localhost:8000
+- 📚 **API 문서**: http://localhost:8000/docs
+- 💚 **헬스 체크**: http://localhost:8000/health
+- 📊 **통계**: http://localhost:8000/stats
+
+> 💡 **참고**: 
+> - 벡터 DB가 없으면 API 서버 시작 시 자동으로 초기화됩니다 (약 10-15분 소요)
+> - 프론트엔드 서버는 별도 창에서 실행됩니다 (Windows) 또는 백그라운드에서 실행됩니다 (Linux/Mac)
+
+---
+
+## 🛠 수동 설정 (고급 사용자용)
 
 ### 1단계: 가상 환경 생성 및 의존성 설치 (2분)
 
@@ -119,14 +171,33 @@ python backend/scripts/test_rag.py
 
 ### 5단계: API 서버 실행 (즉시)
 
+#### 방법 1: 자동 스크립트 사용 (권장)
+
 ```bash
-cd backend/api
-uvicorn main:app --reload --port 8000
+# Windows
+run_dev.bat
+
+# Linux/Mac
+./run_dev.sh
+```
+
+#### 방법 2: 수동 실행
+
+```bash
+cd backend
+.venv\Scripts\activate  # Windows
+# 또는
+source .venv/bin/activate  # Linux/Mac
+
+python -m uvicorn backend.api.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 **브라우저에서 확인:**
-- API 문서: http://localhost:8000/docs
-- 헬스 체크: http://localhost:8000/health
+- 🌐 API 문서: http://localhost:8000/docs
+- 💚 헬스 체크: http://localhost:8000/health
+- 📊 통계: http://localhost:8000/stats
+
+> ⚠️ **주의**: 벡터 DB가 없으면 서버 시작 시 자동으로 초기화됩니다 (약 10-15분 소요)
 
 ## 📝 첫 API 요청 보내기
 

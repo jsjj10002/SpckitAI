@@ -123,8 +123,6 @@ SpckitAI/
 │   ├── chroma_db/          # ChromaDB 저장소 (생성됨)
 │   ├── .env                # 환경 변수 (생성 필요)
 │   ├── pyproject.toml      # Python 프로젝트 설정
-│   ├── run_init.bat        # Windows 초기화 스크립트
-│   ├── run_test.bat        # Windows 테스트 스크립트
 │   ├── RAG_GUIDE.md        # RAG 시스템 가이드
 │   ├── QUICK_START.md      # 빠른 시작 가이드
 │   └── TROUBLESHOOTING.md  # 문제 해결 가이드
@@ -139,6 +137,13 @@ SpckitAI/
 │
 ├── dist/                   # 빌드 출력 (생성됨)
 ├── scripts/                # 빌드 스크립트
+│
+├── run_dev.bat             # Windows 통합 개발 서버 실행 (프론트+백엔드)
+├── run_dev.sh              # Linux/Mac 통합 개발 서버 실행 (프론트+백엔드)
+├── run_test.bat            # Windows RAG 시스템 테스트
+├── run_test.sh             # Linux/Mac RAG 시스템 테스트
+├── setup_dev.bat           # Windows 개발 환경 자동 설정
+├── setup_dev.sh            # Linux/Mac 개발 환경 자동 설정
 │   └── build.js
 │
 ├── .env.local              # 로컬 개발 환경 변수
@@ -154,34 +159,77 @@ SpckitAI/
 
 ## 🚀 시작하기
 
-### 사전 요구사항
+### ⚡ 빠른 시작 (자동 설정 - 권장)
+
+팀원 개발자들을 위한 **완전 자동화된 설정**을 제공합니다!
+
+```bash
+# 1. 저장소 클론
+git clone <repository-url>
+cd SpckitAI
+
+# 2. 자동 설정 실행
+# Windows
+setup_dev.bat
+
+# Linux/Mac
+chmod +x setup_dev.sh
+./setup_dev.sh
+```
+
+이 스크립트가 자동으로:
+- ✅ uv 설치 확인 및 설치
+- ✅ 가상 환경 생성
+- ✅ 의존성 설치
+- ✅ .env 파일 생성 (API 키 입력)
+- ✅ .env.local 파일 생성 (프론트엔드용)
+- ✅ 벡터 DB 초기화 (선택사항)
+
+**설정 완료 후:**
+```bash
+# 백엔드 + 프론트엔드 통합 실행
+run_dev.bat  # Windows (프론트엔드와 백엔드를 모두 실행)
+./run_dev.sh  # Linux/Mac (프론트엔드와 백엔드를 모두 실행)
+```
+
+> 💡 **참고**: `run_dev.bat`/`run_dev.sh`는 프론트엔드와 백엔드를 모두 실행합니다. 프론트엔드는 별도 창(Windows) 또는 백그라운드(Linux/Mac)에서 실행됩니다.
+
+> 💡 **참고**: 벡터 DB가 없으면 API 서버 시작 시 자동으로 초기화됩니다 (약 10-15분 소요)
+
+---
+
+### 🛠 수동 설정 (고급 사용자용)
+
+#### 사전 요구사항
 
 - Node.js 18.0.0 이상
 - Python 3.10 이상
 - uv (Python 패키지 관리자)
 - Google AI Studio API 키
 
-### 1. 저장소 클론
+#### 1. 저장소 클론
 
 ```bash
 git clone <repository-url>
 cd SpckitAI
 ```
 
-### 2. 환경 변수 설정
+#### 2. 환경 변수 설정
 
-#### Frontend (.env.local)
+##### Frontend (.env.local)
 ```env
 GEMINI_API_KEY="your-api-key-here"
 VITE_GEMINI_API_KEY="your-api-key-here"
 ```
 
-#### Backend (backend/.env)
+##### Backend (backend/.env)
 ```env
 GEMINI_API_KEY="your-api-key-here"
+ENVIRONMENT=development
+AUTO_INIT_DB=true
 ```
 
-### 3. Frontend 설정
+#### 3. Frontend 설정
 
 ```bash
 # 의존성 설치
@@ -216,27 +264,31 @@ uv pip install -e .
 ### 5. RAG 데이터베이스 초기화
 
 ```bash
-# 프로젝트 루트로 이동
-cd ..
-
-# Windows
-backend\run_init.bat
-
-# 또는 수동 실행
+# 수동 실행 (setup_dev.bat에서 자동 초기화 옵션 제공)
 python backend/scripts/init_database.py
+
+# 강제 재초기화
+python backend/scripts/init_database.py --force
 ```
 
-**초기화 시간**: 약 10-30분 (135,660개 레코드 처리)
+**초기화 시간**: 약 10-15분 (135,660개 레코드 처리)
+
+> 💡 **참고**: `setup_dev.bat` 실행 시 벡터 DB 초기화 옵션이 제공되며, `run_dev.bat` 실행 시에도 자동으로 초기화됩니다.
 
 ### 6. RAG 시스템 테스트
 
 ```bash
 # Windows
-backend\run_test.bat
+run_test.bat
 
-# 또는 수동 실행
+# Linux/Mac
 python backend/scripts/test_rag.py
 ```
+
+**테스트 내용**:
+- 벡터 DB 연결 및 데이터 확인
+- 자연어 쿼리 처리 테스트
+- 부품 검색 및 추천 기능 테스트
 
 ## 🧠 RAG 시스템
 

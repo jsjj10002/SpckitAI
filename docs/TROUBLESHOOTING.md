@@ -22,7 +22,7 @@ cd ..
 python backend\scripts\init_database.py
 
 # 방법 2: 배치 파일 사용 (가장 쉬움)
-backend\run_init.bat
+python backend/scripts/init_database.py
 
 # 방법 3: 가상 환경의 Python 직접 사용
 backend\.venv\Scripts\python.exe backend\scripts\init_database.py
@@ -213,7 +213,7 @@ python backend\scripts\init_database.py
 
 3. **배치 파일 사용 (권장):**
 ```bash
-backend\run_init.bat
+python backend/scripts/init_database.py
 ```
 
 ---
