@@ -14,7 +14,7 @@ echo   Spckit AI Dev Server
 echo ========================================
 echo.
 
-REM 프로젝트 루트로 이동 (이미 루트에 있음)
+REM 프로젝트 루트로 이동
 cd /d "%~dp0"
 
 REM 가상 환경 확인
@@ -42,21 +42,12 @@ if not exist ".env" (
 REM Node.js 확인
 echo [INFO] Checking Node.js installation...
 
-where node >nul 2>&1
-if %errorlevel% equ 0 goto :NODE_FOUND
-
 node --version >nul 2>&1
 if %errorlevel% equ 0 goto :NODE_FOUND
 
 :NODE_MISSING
 echo.
 echo [WARNING] Node.js not found or not in PATH.
-echo.
-echo Diagnostic Info:
-echo   - where node result:
-where node
-echo   - node --version result:
-node --version
 echo.
 echo Node.js is required for the frontend server.
 echo Install: https://nodejs.org/
@@ -112,9 +103,13 @@ if not defined FRONTEND_SKIP (
     echo [2/3] Starting frontend development server...
     echo.
     echo [INFO] Starting frontend server in a new window...
-    REM 프로젝트 루트 경로 저장 (이미 루트로 이동했으므로 %CD% 사용)
+    
+    REM 프로젝트 루트 경로 저장
     set "PROJECT_ROOT=%CD%"
-    start "Spckit AI - Frontend Server" /D "%PROJECT_ROOT%" cmd /k "echo Starting Frontend Server... && npm run dev"
+    
+    REM start 명령어 개선: /D 옵션 대신 cd 명령어로 명시적 이동
+    start "Spckit AI - Frontend Server" cmd /k "cd /d "%PROJECT_ROOT%" && echo Starting Frontend Server... && npm run dev"
+    
     timeout /t 3 /nobreak >nul
     echo [DONE] Frontend server started in a new window.
     echo.
@@ -158,4 +153,3 @@ if not defined FRONTEND_SKIP (
 )
 
 pause
-
