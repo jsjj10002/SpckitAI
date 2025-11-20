@@ -50,14 +50,18 @@ class PCRecommendationGenerator:
         prompt = self._build_prompt(user_query, context, system_instruction)
 
         try:
-            # Gemini API 호출
+            # Gemini API 호출 (Google Search 도구 활성화)
+            # 검색 도구 설정
+            tools = [types.Tool(google_search=types.GoogleSearch())]
+            
             response = self.client.models.generate_content(
                 model=self.model_name,
                 contents=prompt,
                 config=types.GenerateContentConfig(
                     temperature=self.temperature,
-                    max_output_tokens=8192,  # 토큰 제한 증가 (2048 -> 8192)
+                    max_output_tokens=8192,
                     response_mime_type="application/json",
+                    tools=tools,  # Google Search 도구 적용
                 ),
             )
 
@@ -160,24 +164,29 @@ class PCRecommendationGenerator:
 사용자 요청: "{user_query}"
 
 위의 검색된 부품 정보를 참고하여, 사용자의 요청에 맞는 PC 부품을 추천해주세요.
+**중요**: 가격 정보가 없거나 불확실한 경우, Google Search 도구를 사용하여 최신 가격을 검색해서 채워넣으세요.
 
 다음 JSON 형식으로 응답해주세요:
 {{
     "analysis": "사용자 요구사항에 대한 상세 분석 (200자 이내)",
     "components": [
         {{
-            "category": "부품 카테고리",
+            "category": "부품 카테고리 (예: CPU, GPU, Mainboard, RAM, SSD, Case, Power, Cooler)",
             "name": "제품명",
-            "price": "예상 가격 (만원 또는 원)",
-            "features": ["특징1", "특징2", "특징3"],
-            "why_recommended": "추천 이유"
+            "price": "가격 (예: 350,000원). 검색된 최신 가격을 사용하세요.",
+            "hashtags": ["#특징1", "#특징2", "#특징3"], 
+            "features": ["상세 특징1", "상세 특징2"],
+            "reason": "추천 이유 (간략하게)"
         }}
     ],
     "total_price": "총 예상 가격",
     "additional_notes": "추가 조언 및 주의사항"
 }}
 
-**중요**: 검색된 부품 정보에 없는 내용은 추측하지 말고, 있는 정보만을 기반으로 추천하세요."""
+**스타일 가이드**:
+1. 'hashtags'는 제품의 핵심 특징을 짧은 키워드로 3~4개 추출하여 해시태그(#)를 붙여서 작성하세요. (예: #고성능 #게이밍 #화이트)
+2. 'price'는 가능한 정확한 한국 원화 가격을 검색하여 기입하세요.
+3. 검색된 부품 정보에 없는 내용은 검색 기능을 적극 활용하여 보완하세요."""
 
         return prompt
 

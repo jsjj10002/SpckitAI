@@ -182,8 +182,21 @@ async function addMessageWithTyping(text, type = 'ai') {
   });
 }
 
+// 아이콘 정의
+const COMPONENT_ICONS = {
+  'CPU': '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></svg>',
+  'GPU': '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="11" cy="12" r="2"/><circle cx="17" cy="12" r="2"/><path d="M2 10h4v4H2z"/></svg>',
+  'RAM': '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4v16h20V4H2zm4 16V4m4 16V4m4 16V4m4 16V4"/></svg>',
+  'SSD': '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="6" width="16" height="12" rx="2"/><path d="M6 10h12M6 14h12"/></svg>',
+  'Mainboard': '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 8h2v2H8zm4 0h4v4h-4zM8 14h2v2H8z"/></svg>',
+  'Power': '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M12 12h.01"/><circle cx="12" cy="12" r="4"/></svg>',
+  'Case': '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M10 6h4"/></svg>',
+  'Cooler': '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M12 4v16M4 12h16"/></svg>',
+  'Default': '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>'
+};
+
 /**
- * 추천 부품 표시 (터미널 스타일)
+ * 추천 부품 표시 (카드 스타일)
  */
 function displayRecommendations(components) {
   terminalContent.innerHTML = '';
@@ -193,50 +206,70 @@ function displayRecommendations(components) {
     return;
   }
 
-  components.forEach((component, index) => {
-    const line = createTerminalLine(component);
-    terminalContent.appendChild(line);
+  const list = document.createElement('div');
+  list.className = 'recommendation-list';
+
+  components.forEach((component) => {
+    const card = createRecommendationCard(component);
+    list.appendChild(card);
   });
+
+  terminalContent.appendChild(list);
 }
 
 /**
- * 터미널 라인 생성 (원본 디자인 스타일)
+ * 추천 카드 생성
  */
-function createTerminalLine(component) {
-  const line = document.createElement('div');
-  line.className = 'terminal-line';
-  line.style.cursor = 'pointer';
-  line.style.padding = '8px';
-  line.style.borderRadius = '4px';
-  line.style.marginBottom = '4px';
+function createRecommendationCard(component) {
+  const card = document.createElement('div');
+  card.className = 'recommendation-card';
   
-  line.innerHTML = `
-    <span class="arrow">➜</span> 
-    <span class="bold">${component.category}</span>: 
-    ${component.name} - 
-    <span class="link">${component.price}</span>
-    ${component.features.length > 0 ? `<span style="color: var(--color-text-muted); margin-left: 8px;">(${component.features.slice(0, 2).join(', ')})</span>` : ''}
+  // 카테고리 대소문자 처리 및 매핑
+  const categoryKey = Object.keys(COMPONENT_ICONS).find(key => 
+    component.category.toLowerCase().includes(key.toLowerCase())
+  ) || 'Default';
+  
+  const iconSvg = COMPONENT_ICONS[categoryKey];
+
+  // 해시태그 처리 (hashtags가 없으면 features 사용)
+  const tags = component.hashtags && component.hashtags.length > 0 
+    ? component.hashtags 
+    : (component.features || []);
+
+  const tagsHtml = tags
+    .slice(0, 3) // 최대 3개
+    .map(tag => {
+       const text = tag.startsWith('#') ? tag : `#${tag}`;
+       return `<span class="tag">${text}</span>`;
+    })
+    .join('');
+
+  card.innerHTML = `
+    <div class="card-header">
+      <div class="card-icon">${iconSvg}</div>
+      <div class="card-info">
+        <div class="card-category">${component.category}</div>
+        <div class="card-name" title="${component.name}">${component.name}</div>
+      </div>
+    </div>
+    <div class="card-details">
+      <div class="card-tags">
+        ${tagsHtml}
+      </div>
+      <div class="card-price">${component.price}</div>
+    </div>
   `;
   
-  // 호버 효과
-  line.addEventListener('mouseenter', () => {
-    line.style.background = 'rgba(255, 255, 255, 0.05)';
-  });
-  
-  line.addEventListener('mouseleave', () => {
-    line.style.background = 'transparent';
-  });
-  
   // 클릭 이벤트 - 부품 선택
-  line.addEventListener('click', () => {
+  card.addEventListener('click', () => {
     selectPart(component);
-    line.style.background = 'rgba(90, 247, 142, 0.1)';
-    setTimeout(() => {
-      line.style.background = 'transparent';
-    }, 300);
+    
+    // 선택 효과
+    card.classList.add('selected');
+    setTimeout(() => card.classList.remove('selected'), 500);
   });
   
-  return line;
+  return card;
 }
 
 /**
@@ -253,6 +286,36 @@ function selectPart(component) {
   }
   
   updateSelectedParts();
+  
+  // 다음 단계 제안 (꼬리 질문)
+  triggerNextStep(component);
+}
+
+/**
+ * 다음 단계 제안 (꼬리 질문)
+ */
+function triggerNextStep(component) {
+  const category = component.category.toLowerCase();
+  let nextMessage = '';
+
+  // 부품 선택 순서 로직
+  if (category.includes('cpu')) {
+    nextMessage = `CPU로 **${component.name}**을(를) 선택하셨군요! \n이 CPU와 호환되는 **메인보드**를 추천해 드릴까요?`;
+  } else if (category.includes('board') || category.includes('메인보드')) {
+     nextMessage = `메인보드를 선택하셨습니다. 이제 **메모리(RAM)**를 골라볼까요?`;
+  } else if (category.includes('ram') || category.includes('메모리')) {
+     nextMessage = `메모리 선택 완료! 다음으로 **그래픽카드(GPU)**는 어떠신가요?`;
+  } else if (category.includes('gpu') || category.includes('그래픽')) {
+     nextMessage = `그래픽카드까지 고르셨네요. **SSD(저장장치)**나 **케이스**를 보러 갈까요?`;
+  } else if (category.includes('ssd') || category.includes('저장')) {
+     nextMessage = `저장장치도 준비되었습니다. 이제 **파워서플라이**나 **케이스**를 선택해 보세요.`;
+  } else {
+     nextMessage = `**${component.name}**이(가) 목록에 추가되었습니다. \n다음으로 어떤 부품을 찾으시나요?`;
+  }
+
+  // AI 메시지로 추가
+  addMessageWithTyping(nextMessage, 'ai');
+  chatHistory.push({ role: 'model', text: nextMessage });
 }
 
 /**

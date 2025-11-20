@@ -3,6 +3,8 @@ FastAPI 기반 RAG API 서버
 """
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles  # <--- 추가
+from fastapi.responses import FileResponse   # <--- 추가
 from pydantic import BaseModel, Field
 from typing import Optional, List, Dict, Any
 from loguru import logger
@@ -261,3 +263,20 @@ if __name__ == "__main__":
         log_level="info",
     )
 
+
+
+# 프론트엔드 정적 파일 서빙 (배포용)
+import os
+
+# dist 폴더가 존재할 경우에만 정적 파일 서빙 (로컬 개발 시 충돌 방지)
+if os.path.exists("dist"):
+    app.mount("/", StaticFiles(directory="dist", html=True), name="static")
+else:
+    # 로컬 개발 등 dist가 없을 때의 안내
+    @app.get("/")
+    async def root():
+        return {
+            "service": "Spckit AI - API Server",
+            "mode": "Backend Only (Frontend not built)",
+            "docs": "/docs"
+        }

@@ -91,10 +91,11 @@ fi
 if [ -z "$FRONTEND_SKIP" ]; then
     echo "[2/3] 프론트엔드 개발 서버 시작 중..."
     echo ""
-    npm run dev > /dev/null 2>&1 &
+    npm run dev > frontend.log 2>&1 &
     FRONTEND_PID=$!
     sleep 2
     echo "[완료] 프론트엔드 서버가 백그라운드에서 시작되었습니다."
+    echo "[정보] 로그 확인: tail -f frontend.log"
     echo ""
 fi
 

@@ -1,35 +1,42 @@
-# 빌드 스테이지
-FROM node:20-alpine AS builder
-
-# 작업 디렉토리 설정
+# 1. Build Stage (Frontend)
+FROM node:20-alpine AS frontend-builder
 WORKDIR /app
 
-# package.json과 package-lock.json 복사 (있는 경우)
+# 프론트엔드 빌드 관련 파일 복사
 COPY package*.json ./
+COPY scripts/ ./scripts/
+COPY frontend/ ./frontend/
 
-# 의존성 설치 (package-lock.json이 있으면 npm ci, 없으면 npm install)
-RUN if [ -f package-lock.json ]; then npm ci; else npm install --production=false; fi
-
-# 소스 코드 복사
-COPY . .
-
-# 프로덕션 빌드
+# 의존성 설치 및 빌드
+RUN npm install
 RUN npm run build
 
-# 프로덕션 스테이지
-FROM node:20-alpine
+# 2. Runtime Stage (Backend + Frontend)
+FROM python:3.11-slim
 
-# serve 패키지 전역 설치
-RUN npm install -g serve
-
-# 작업 디렉토리 설정
 WORKDIR /app
 
-# 빌드된 정적 파일 복사
-COPY --from=builder /app/dist ./dist
+# 시스템 패키지 설치
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
-# 포트 노출 (Cloud Run은 $PORT 환경 변수 사용)
-EXPOSE 8080
+# Python 의존성 설치
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# serve로 정적 파일 서빙 (Cloud Run의 $PORT 환경 변수 사용)
-CMD ["sh", "-c", "serve -s dist -l ${PORT:-8080}"]
+# 소스 코드 및 데이터 복사
+COPY backend/ ./backend/
+# 로컬에 생성된 ChromaDB 데이터도 함께 복사 (데이터 유지)
+COPY backend/chroma_db/ ./backend/chroma_db/
+COPY .env .
+
+# 빌드된 프론트엔드 파일 복사
+COPY --from=frontend-builder /app/dist ./dist
+
+# 포트 설정
+ENV PORT=8000
+EXPOSE 8000
+
+# 서버 실행
+CMD ["sh", "-c", "python -m uvicorn backend.api.main:app --host 0.0.0.0 --port $PORT"]

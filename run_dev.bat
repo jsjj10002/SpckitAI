@@ -114,7 +114,7 @@ if not defined FRONTEND_SKIP (
     echo [INFO] Starting frontend server in a new window...
     REM 프로젝트 루트 경로 저장 (이미 루트로 이동했으므로 %CD% 사용)
     set "PROJECT_ROOT=%CD%"
-    start "Spckit AI - Frontend Server" cmd /k "chcp 65001 >nul && cd /d "%PROJECT_ROOT%" && echo. && echo ======================================== && echo   프론트엔드 개발 서버 && echo ======================================== && echo. && echo [정보] 프론트엔드 서버가 시작되었습니다. && echo [정보] 웹 페이지: http://localhost:3000 && echo. && echo 서버를 중지하려면 이 창을 닫거나 Ctrl+C를 누르세요. && echo. && npm run dev"
+    start "Spckit AI - Frontend Server" /D "%PROJECT_ROOT%" cmd /k "echo Starting Frontend Server... && npm run dev"
     timeout /t 3 /nobreak >nul
     echo [DONE] Frontend server started in a new window.
     echo.

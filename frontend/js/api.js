@@ -3,7 +3,8 @@
  * FastAPI 백엔드 API 서버와 연결하여 추천 결과를 가져옵니다.
  * Vite 환경 변수에 `VITE_API_BASE_URL`이 설정되어 있으면 해당 값을 우선 사용합니다.
  */
-const DEFAULT_API_BASE_URL = 'http://localhost:8000';
+// 배포 환경에서는 현재 도메인을 그대로 사용하기 위해 빈 문자열로 설정
+const DEFAULT_API_BASE_URL = ''; 
 
 const API_BASE_URL = (() => {
   if (typeof import.meta !== 'undefined' && import.meta.env) {
