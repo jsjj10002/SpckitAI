@@ -56,13 +56,42 @@ class PCRecommendationGenerator:
                 contents=prompt,
                 config=types.GenerateContentConfig(
                     temperature=self.temperature,
-                    max_output_tokens=2048,
+                    max_output_tokens=8192,  # 토큰 제한 증가 (2048 -> 8192)
                     response_mime_type="application/json",
                 ),
             )
 
+            # 응답 텍스트 추출 및 로깅
+            generated_text = response.text
+            
+            # response.text가 None인 경우 candidates에서 직접 추출 시도 (MAX_TOKENS 등으로 중단된 경우)
+            if generated_text is None and response.candidates:
+                try:
+                    part = response.candidates[0].content.parts[0]
+                    if part.text:
+                        generated_text = part.text
+                        logger.warning("response.text가 비어있어 candidate에서 텍스트를 추출했습니다.")
+                except (AttributeError, IndexError):
+                    pass
+            
+            logger.info(f"Gemini 응답 텍스트 타입: {type(generated_text)}")
+            
+            # 응답 유효성 검사
+            if not generated_text:
+                finish_reason = "Unknown"
+                if response.candidates and response.candidates[0].finish_reason:
+                    finish_reason = response.candidates[0].finish_reason
+                
+                logger.error(f"Gemini API 응답이 비어있습니다. 종료 원인: {finish_reason}")
+                return {
+                    "analysis": "AI 응답을 생성하지 못했습니다.",
+                    "components": [],
+                    "total_price": "0",
+                    "additional_notes": f"API 응답 오류 (종료 원인: {finish_reason})"
+                }
+
             # 응답 파싱
-            result = json.loads(response.text)
+            result = json.loads(generated_text)
             
             logger.info(f"추천 생성 완료: '{user_query[:50]}...'")
             return result
@@ -187,12 +216,25 @@ class PCRecommendationGenerator:
                 contents=prompt,
                 config=types.GenerateContentConfig(
                     temperature=0.5,
-                    max_output_tokens=2048,
+                    max_output_tokens=8192,  # 토큰 제한 증가
                     response_mime_type="application/json",
                 ),
             )
 
-            return json.loads(response.text)
+            # 응답 텍스트 추출 안전장치
+            generated_text = response.text
+            if generated_text is None and response.candidates:
+                try:
+                    part = response.candidates[0].content.parts[0]
+                    if part.text:
+                        generated_text = part.text
+                except (AttributeError, IndexError):
+                    pass
+            
+            if not generated_text:
+                raise ValueError("생성된 텍스트가 없습니다.")
+
+            return json.loads(generated_text)
 
         except Exception as e:
             logger.error(f"비교 분석 실패: {str(e)}")
